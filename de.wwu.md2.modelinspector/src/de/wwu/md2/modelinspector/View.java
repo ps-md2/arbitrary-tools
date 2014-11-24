@@ -6,9 +6,11 @@ import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import de.wwu.md2.modelinspector.parser.EcoreModelParser;
@@ -16,15 +18,21 @@ import de.wwu.md2.modelinspector.parser.data.ClassData;
 
 public class View extends ViewPart {
 	public static final String ID = "de.wwu.md2.modelinspector.view";
-
+	
+	private Tree tree;
 	/**
 	 * This is a callback that will allow us to create the viewer and initialize
 	 * it.
 	 */
 	public void createPartControl(Composite parent) {
 		
-		Tree tree = new Tree(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		tree = new Tree(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 	    tree.setHeaderVisible(true);
+	    
+	    FileDialog dialog = new FileDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), SWT.OPEN);
+	    dialog.setFilterExtensions(new String [] {"*.ecore"});
+	    dialog.setFilterPath("c:\\temp");
+	    String modelPath = dialog.open();
 	    
 	    TreeColumn column1 = new TreeColumn(tree, SWT.LEFT);
 	    column1.setText("Name");
@@ -32,8 +40,13 @@ public class View extends ViewPart {
 	    TreeColumn column2 = new TreeColumn(tree, SWT.CENTER);
 	    column2.setText("Features");
 	    column2.setWidth(200);
-	    
-	    EcoreModelParser.parse("C:/Development/GIT/md2-framework/de.wwu.md2.framework/src-gen/de/wwu/md2/framework/MD2.ecore");
+
+	    loadModel(modelPath);
+	}
+	
+	public void loadModel(String path) {
+		tree.removeAll();
+		EcoreModelParser.parse(path);
 	    Map<String, ClassData> data = EcoreModelParser.getDate();
 	    
 	    Set<String> keySet = data.keySet();
@@ -47,21 +60,7 @@ public class View extends ViewPart {
 	    	item.setText(new String[] { classData.getName(), classData.getFeatures().toString() } );
 	    	
 	    	addChilds(classData, item);
-//	    	for(ClassData subType : classData.getSubTypes()) {
-//	    		TreeItem subItem = new TreeItem(item, SWT.NONE);
-//	    		subItem.setText(new String[] { subType.getName(), subType.getFeatures().toString() });
-//	    	}
-	    	
 	    }
-		
-		
-		
-//		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
-//				| SWT.V_SCROLL);
-//		viewer.setContentProvider(new ViewContentProvider());
-//		viewer.setLabelProvider(new ViewLabelProvider());
-//		// Provide the input to the ContentProvider
-//		viewer.setInput(new String[] {"One", "Two", "Three"});
 	}
 	
 	private static void addChilds(ClassData classData, TreeItem parentItem) {
