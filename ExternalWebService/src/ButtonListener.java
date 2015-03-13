@@ -20,13 +20,13 @@ class ButtonListener implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 
         HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://localhost:8080/CurrentStateProject.backend/service/locationDetection/myPath");
+        HttpPost post = new HttpPost("http://localhost:8080/CurrentStateProject.backend/service/locationDetection/address");
         try {
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-            nameValuePairs.add(new BasicNameValuePair("street", MainWindow.street.getText()));
-            nameValuePairs.add(new BasicNameValuePair("number", MainWindow.nr.getText()));
-            nameValuePairs.add(new BasicNameValuePair("city", MainWindow.city.getText()));
-            nameValuePairs.add(new BasicNameValuePair("plz", MainWindow.plz.getText()));
+            nameValuePairs.add(new BasicNameValuePair("myStreet", MainWindow.street.getText()));
+            nameValuePairs.add(new BasicNameValuePair("myStreetNo", MainWindow.nr.getText()));
+            nameValuePairs.add(new BasicNameValuePair("myCity", MainWindow.city.getText()));
+            nameValuePairs.add(new BasicNameValuePair("myPostalCode", MainWindow.plz.getText()));
             post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             HttpResponse response = client.execute(post);

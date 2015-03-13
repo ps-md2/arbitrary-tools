@@ -14,7 +14,7 @@ public class MainWindow {
 	public static JTextField plz;
 	
 	public static void main(String[] args){
-		JFrame frame = new JFrame("Externel WebService");
+		JFrame frame = new JFrame("External WebService");
 		frame.setSize(300,150);
 
 		GridLayout gridLayout = new GridLayout(5, 2);
