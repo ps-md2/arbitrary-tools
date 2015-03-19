@@ -3,6 +3,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,14 +21,15 @@ class ButtonListener implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 
         HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://localhost:8080/CurrentStateProject.backend/service/locationDetection/address");
+        HttpPost post = new HttpPost("http://localhost:8080/CurrentStateProject.backend/service/submitComplaint/fileComplaint");
         try {
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-            nameValuePairs.add(new BasicNameValuePair("myStreet", MainWindow.street.getText()));
-            nameValuePairs.add(new BasicNameValuePair("myStreetNo", MainWindow.nr.getText()));
-            nameValuePairs.add(new BasicNameValuePair("myCity", MainWindow.city.getText()));
-            nameValuePairs.add(new BasicNameValuePair("myPostalCode", MainWindow.plz.getText()));
-            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            nameValuePairs.add(new BasicNameValuePair("street", MainWindow.street.getText()));
+            nameValuePairs.add(new BasicNameValuePair("streetNo", MainWindow.nr.getText()));
+            nameValuePairs.add(new BasicNameValuePair("city", MainWindow.city.getText()));
+            nameValuePairs.add(new BasicNameValuePair("plz", MainWindow.plz.getText()));
+            nameValuePairs.add(new BasicNameValuePair("desc", MainWindow.description.getText()));
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs, Charset.defaultCharset()));
 
             HttpResponse response = client.execute(post);
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
